@@ -1,0 +1,27 @@
+FROM alpine:3.8
+MAINTAINER Dean Kayton <https://dnk8n.me> <deankayton@gmail.com>
+RUN \
+    apk update && \
+    apk --no-cache add alpine-sdk && \
+    adduser -D -s /bin/ash -G abuild abuild
+USER abuild
+WORKDIR /home/abuild
+COPY APKBUILD /home/abuild/
+ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
+RUN \
+    abuild-keygen -n -a && \
+    abuild -r
+
+FROM alpine:3.8
+MAINTAINER Dean Kayton <https://dnk8n.me> <deankayton@gmail.com>
+COPY --from=0 /home/abuild/packages/home/x86_64/*.apk /tmp/bazel.apk
+COPY --from=0 /home/abuild/.abuild/*.rsa.pub /etc/apk/keys/
+RUN \
+    apk update && \
+    apk --no-cache add /tmp/bazel.apk && \
+    adduser -D -s /bin/bash bazel && \
+    rm -rf /tmp/* /etc/apk/keys/*
+USER bazel
+WORKDIR /home/bazel
+ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
+ENTRYPOINT ["bazel"]
