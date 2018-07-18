@@ -8,6 +8,9 @@ arch="all"
 license="ASL-2.0"
 url='https://bazel.io/'
 depends="bash openjdk8 libarchive zip unzip"
+# coreutils can be removed as a make dependency once expr in busybox is compatible with the BSD version, see following bug reports:
+# Patch bazel: https://github.com/bazelbuild/bazel/issues/4055
+# https://bugs.alpinelinux.org/issues/8121
 makedepends="coreutils git linux-headers protobuf python"
 options="!distcc !strip"
 source="https://github.com/bazelbuild/bazel/releases/download/${pkgver}/bazel-${pkgver}-dist.zip
