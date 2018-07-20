@@ -1,0 +1,16 @@
+FROM alpine:3.8
+MAINTAINER Dean Kayton <https://dnk8n.me> <deankayton@gmail.com>
+ENV BAZEL_VERSION 0.15.2
+ENV BAZEL_REV 0
+ENV FORK davido
+ENV PUBLIC_KEY david@ostrovsky.org-5a0369d6.rsa.pub
+RUN \
+    apk update && \
+    wget -q https://github.com/${FORK}/bazel-alpine-package/releases/download/${BAZEL_VERSION}/${PUBLIC_KEY} -O /etc/apk/keys/${PUBLIC_KEY} && \
+    wget -q https://github.com/${FORK}/bazel-alpine-package/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-r${BAZEL_REV}.apk && \
+    apk --no-cache add bazel-${BAZEL_VERSION}-r${BAZEL_REV}.apk && \
+    adduser -D -s /bin/bash bazel
+USER bazel
+WORKDIR /home/bazel
+ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
+ENTRYPOINT ["bazel"]
