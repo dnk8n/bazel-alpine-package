@@ -6,9 +6,10 @@ ENV FORK davido
 ENV PUBLIC_KEY david@ostrovsky.org-5a0369d6.rsa.pub
 RUN \
     wget -q https://raw.githubusercontent.com/${FORK}/bazel-alpine-package/${BAZEL_VERSION}/${PUBLIC_KEY} -O /etc/apk/keys/${PUBLIC_KEY} && \
-    wget -q https://github.com/${FORK}/bazel-alpine-package/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-r${BAZEL_REV}.apk && \
+    wget -q https://github.com/${FORK}/bazel-alpine-package/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-r${BAZEL_REV}.apk -O /tmp/bazel.apk && \
     apk update && \
-    apk --no-cache add bazel-${BAZEL_VERSION}-r${BAZEL_REV}.apk && \
+    apk --no-cache add /tmp/bazel.apk && \
+    rm -rf /tmp/bazel.apk /etc/apk/keys/${PUBLIC_KEY} && \
     adduser -D -s /bin/bash bazel
 USER bazel
 WORKDIR /home/bazel
