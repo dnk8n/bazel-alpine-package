@@ -3,7 +3,7 @@ version: "3.6"
 services:
 
   bazel-dev:
-    build: ./build/dockerfile.dev
+    build: ./build/apkbuild
     image: dnk8n/bazel:0.15.2-alpine3.8-dev
     container_name: bazel-dev
     tty: true
